@@ -23,7 +23,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil3.ImageLoader
+import coil3.compose.AsyncImage
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.request.crossfade
+import coil3.util.DebugLogger
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -34,6 +40,13 @@ import multisites.composeapp.generated.resources.compose_multiplatform
 @Preview
 fun App() {
     MaterialTheme {
+        // Define builder image behaviour by default
+        setSingletonImageLoaderFactory { context ->
+            ImageLoader.Builder(context)
+                .crossfade(true)
+                .logger(DebugLogger())
+                .build()
+        }
         Surface(modifier = Modifier.fillMaxSize()) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(120.dp),
@@ -52,12 +65,14 @@ fun App() {
 @Composable
 fun SiteItem(site: Site) {
     Column {
-        Box(
+        AsyncImage(
+            model = site.image,
+            contentDescription = site.name,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
-                .fillMaxSize()
-                .aspectRatio(2/3f)
+                .fillMaxWidth()
+                .aspectRatio(2 / 3f)
                 .clip(MaterialTheme.shapes.small)
-                .background(MaterialTheme.colorScheme.primaryContainer)
         )
         Text(
             text = site.name,
