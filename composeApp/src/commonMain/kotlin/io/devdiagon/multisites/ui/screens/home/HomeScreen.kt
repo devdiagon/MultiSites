@@ -1,5 +1,6 @@
 package io.devdiagon.multisites.ui.screens.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,7 +32,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onSiteClick: (Site) -> Unit) {
     Screen {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         Scaffold(
@@ -51,7 +52,7 @@ fun HomeScreen() {
                 modifier = Modifier.padding(padding)
             ) {
                 items(sites, key = { it.id }) {
-                    SiteItem(site = it)
+                    SiteItem(site = it, onSiteClick = { onSiteClick(it) })
                 }
             }
         }
@@ -59,8 +60,10 @@ fun HomeScreen() {
 }
 
 @Composable
-fun SiteItem(site: Site) {
-    Column {
+fun SiteItem(site: Site, onSiteClick: () -> Unit) {
+    Column(
+        modifier = Modifier.clickable(onClick = onSiteClick)
+    ) {
         AsyncImage(
             model = site.image,
             contentDescription = site.name,

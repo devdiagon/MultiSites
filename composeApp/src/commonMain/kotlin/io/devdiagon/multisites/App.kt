@@ -6,8 +6,7 @@ import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.request.crossfade
 import coil3.util.DebugLogger
-import io.devdiagon.multisites.ui.screens.detail.DetailScreen
-import io.devdiagon.multisites.ui.screens.home.HomeScreen
+import io.devdiagon.multisites.ui.screens.Navigation
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -21,5 +20,5 @@ fun App() {
             .logger(DebugLogger())
             .build()
     }
-    DetailScreen()
+    Navigation()
 }
