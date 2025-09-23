@@ -20,8 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import io.devdiagon.multisites.Site
-import io.devdiagon.multisites.sites
+import io.devdiagon.multisites.data.Site
 import io.devdiagon.multisites.ui.screens.Screen
 import multisites.composeapp.generated.resources.Res
 import multisites.composeapp.generated.resources.back

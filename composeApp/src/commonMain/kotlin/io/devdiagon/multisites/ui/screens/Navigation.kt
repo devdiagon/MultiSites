@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import io.devdiagon.multisites.sites
+import io.devdiagon.multisites.data.sites
 import io.devdiagon.multisites.ui.screens.detail.DetailScreen
 import io.devdiagon.multisites.ui.screens.home.HomeScreen
 import kotlinx.serialization.Serializable

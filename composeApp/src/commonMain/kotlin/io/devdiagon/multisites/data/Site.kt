@@ -1,4 +1,4 @@
-package io.devdiagon.multisites
+package io.devdiagon.multisites.data
 
 data class Site(
     val id: Int,
