@@ -5,8 +5,14 @@ class SitesRepository(private val sitesService: SitesService) {
         return sitesService.fetchRawSitesIds().features.map { it.toListxids() }
     }
 
-    suspend fun fetchRawSiteDetails(xid: String): RawPlaceDetailsReq {
-        return sitesService.getSiteDetails(xid)
+    suspend fun fetchRawSiteDetails(xid: String): Site {
+        val rawSite = sitesService.getSiteDetails(xid)
+        return Site(
+            id = rawSite.xid,
+            name = rawSite.name,
+            image = rawSite.preview.source,
+            description = rawSite.extracts.text
+        )
     }
 }
 

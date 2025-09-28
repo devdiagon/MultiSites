@@ -18,20 +18,14 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             state = UiState(loading = true)
+            // Get just the xid from the request
             val rawSites = repository.fetchRawSitesIds()
 
             state = UiState(
                 loading = false,
-                // Get popular remote Results by using its xid
-                // Get the actual site using based on the xid
+                // Get the actual site using based on the xid (ik double API call)
                 sites = rawSites.map {
-                    val rawSite = repository.fetchRawSiteDetails(it.xid)
-                    Site(
-                        id = rawSite.xid,
-                        name = rawSite.name,
-                        image = rawSite.preview.source,
-                        description = rawSite.extracts.text
-                    )
+                    repository.fetchRawSiteDetails(it.xid)
                 }
             )
         }
