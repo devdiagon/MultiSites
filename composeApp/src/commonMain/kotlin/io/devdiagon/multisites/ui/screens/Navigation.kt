@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import io.devdiagon.multisites.data.SitesRepository
 import io.devdiagon.multisites.data.SitesService
 import io.devdiagon.multisites.ui.screens.home.HomeScreen
 import io.devdiagon.multisites.ui.screens.home.HomeViewModel
@@ -41,7 +42,7 @@ fun Navigation(modifier: Modifier = Modifier) {
     }
     val apiKey = stringResource(Res.string.api_key)
     val viewModel = viewModel {
-        HomeViewModel(SitesService(apiKey, client))
+        HomeViewModel(SitesRepository(SitesService(apiKey, client)))
     }
 
     NavHost(navController = navController, startDestination = HomeRoute) {

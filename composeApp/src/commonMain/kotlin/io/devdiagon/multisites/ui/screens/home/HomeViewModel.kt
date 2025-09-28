@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.devdiagon.multisites.data.Features
 import io.devdiagon.multisites.data.Site
+import io.devdiagon.multisites.data.SitesRepository
 import io.devdiagon.multisites.data.Sitexid
-import io.devdiagon.multisites.data.SitesService
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val sitesService: SitesService
+    private val repository: SitesRepository
 ) : ViewModel() {
     var state  by mutableStateOf(UiState())
         private set
@@ -20,14 +20,14 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             state = UiState(loading = true)
-            val rawSites = sitesService.fetchRawSitesIds().features.map { it.toListxids() }
+            val rawSites = repository.fetchRawSitesIds().features.map { it.toListxids() }
 
             state = UiState(
                 loading = false,
                 // Get popular remote Results by using its xid
                 // Get the actual site using based on the xid
                 sites = rawSites.map {
-                    val rawSite = sitesService.getSiteDetails(it.xid)
+                    val rawSite = repository.fetchRawSiteDetails(it.xid)
                     Site(
                         id = rawSite.xid,
                         name = rawSite.name,
