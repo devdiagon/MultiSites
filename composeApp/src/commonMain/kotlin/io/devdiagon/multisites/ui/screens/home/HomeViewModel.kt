@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.devdiagon.multisites.data.Site
+import io.devdiagon.multisites.data.models.Site
 import io.devdiagon.multisites.data.SitesRepository
 import kotlinx.coroutines.launch
 

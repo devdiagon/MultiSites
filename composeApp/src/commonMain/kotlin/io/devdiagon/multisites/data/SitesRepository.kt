@@ -1,5 +1,9 @@
 package io.devdiagon.multisites.data
 
+import io.devdiagon.multisites.data.models.Site
+import io.devdiagon.multisites.data.models.Sitexid
+import io.devdiagon.multisites.data.payload.Features
+
 class SitesRepository(private val sitesService: SitesService) {
     suspend fun fetchRawSitesIds(): List<Sitexid> {
         return sitesService.fetchRawSitesIds().features.map { it.toListxids() }
@@ -11,7 +15,10 @@ class SitesRepository(private val sitesService: SitesService) {
             id = rawSite.xid,
             name = rawSite.name,
             image = rawSite.preview.source,
-            description = rawSite.extracts.text
+            description = rawSite.extracts.text,
+            city = rawSite.address.city,
+            country = rawSite.address.country,
+            kinds = rawSite.kinds
         )
     }
 }

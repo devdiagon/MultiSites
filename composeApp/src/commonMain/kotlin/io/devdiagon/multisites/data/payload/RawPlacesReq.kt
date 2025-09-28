@@ -1,4 +1,4 @@
-package io.devdiagon.multisites.data
+package io.devdiagon.multisites.data.payload
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -11,9 +11,9 @@ data class RawPlacesReq(
 
 @Serializable
 data class Properties (
-
     @SerialName("xid"      ) var xid      : String = "",
     @SerialName("name"     ) var name     : String = "",
+    @SerialName("rate"     ) var rate     : Int? = null,
     @SerialName("kinds"    ) var kinds    : String? = null
 
 )

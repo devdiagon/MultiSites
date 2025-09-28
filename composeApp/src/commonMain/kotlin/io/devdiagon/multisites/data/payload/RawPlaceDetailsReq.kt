@@ -1,4 +1,4 @@
-package io.devdiagon.multisites.data
+package io.devdiagon.multisites.data.payload
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 data class RawPlaceDetailsReq(
     @SerialName("xid"               ) var xid      : String   = "",
     @SerialName("name"              ) var name     : String   = "",
+    @SerialName("kinds"             ) var kinds    : String   = "",
+    @SerialName("address"           ) var address  : Address  = Address(),
     @SerialName("preview"           ) var preview  : Preview  = Preview(),
     @SerialName("wikipedia_extracts") var extracts : Extracts = Extracts()
 )
@@ -22,5 +24,11 @@ data class Preview (
 @Serializable
 data class Extracts (
     @SerialName("title" ) var title : String? = null,
-    @SerialName("text"  ) var text  : String = ""
+    @SerialName("text"  ) var text  : String  = ""
+)
+
+@Serializable
+data class Address (
+    @SerialName("county" ) var city    : String = "",
+    @SerialName("country") var country : String = ""
 )
