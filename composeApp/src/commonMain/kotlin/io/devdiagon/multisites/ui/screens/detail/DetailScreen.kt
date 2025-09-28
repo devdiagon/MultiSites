@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import io.devdiagon.multisites.data.Site
+import io.devdiagon.multisites.ui.common.LoadingIndicator
 import io.devdiagon.multisites.ui.screens.Screen
 import multisites.composeapp.generated.resources.Res
 import multisites.composeapp.generated.resources.back
@@ -28,12 +28,14 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(site: Site, onBack: () -> Unit) {
+fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
+    val state = vm.state
+
     Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(site.name) },
+                    title = { Text(state.site?.name ?: "") },
                     navigationIcon = {
                         IconButton(onClick = onBack) {
                             Icon(
@@ -45,24 +47,28 @@ fun DetailScreen(site: Site, onBack: () -> Unit) {
                 )
             }
         ) { padding ->
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                AsyncImage(
-                    model = site.image,
-                    contentDescription = site.name,
-                    contentScale = ContentScale.Crop,
+            LoadingIndicator(enabled = state.loading)
+
+            state.site?.let { site ->
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16f / 9f)
-                )
-                Text(
-                    text = site.description,
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.headlineMedium
-                )
+                        .padding(padding)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    AsyncImage(
+                        model = site.image,
+                        contentDescription = site.name,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9f)
+                    )
+                    Text(
+                        text = site.description,
+                        modifier = Modifier.padding(16.dp),
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                }
             }
         }
     }

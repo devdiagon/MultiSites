@@ -8,8 +8,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import io.devdiagon.multisites.data.SitesRepository
 import io.devdiagon.multisites.data.SitesService
+import io.devdiagon.multisites.ui.screens.detail.DetailScreen
+import io.devdiagon.multisites.ui.screens.detail.DetailViewModel
 import io.devdiagon.multisites.ui.screens.home.HomeScreen
 import io.devdiagon.multisites.ui.screens.home.HomeViewModel
 import io.ktor.client.HttpClient
@@ -32,29 +35,7 @@ data class DetailsRoute(val siteId: String)
 @Composable
 fun Navigation(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    val apiKey = stringResource(Res.string.api_key)
-
-    // Temp
-    val client = remember {
-        HttpClient {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                })
-            }
-            install(DefaultRequest) {
-                url {
-                    protocol = URLProtocol.HTTPS
-                    host = "api.opentripmap.com/0.1"
-                    parameters.append("apikey", apiKey)
-                }
-            }
-        }
-    }
-
-    val viewModel = viewModel {
-        HomeViewModel(SitesRepository(SitesService(client)))
-    }
+    val repository = rememberSitesRepository()
 
     NavHost(navController = navController, startDestination = HomeRoute) {
         composable<HomeRoute>() {
@@ -62,18 +43,42 @@ fun Navigation(modifier: Modifier = Modifier) {
                 onSiteClick = { site ->
                     navController.navigate(DetailsRoute(site.id))
                 },
-                vm = viewModel
+                vm = viewModel { HomeViewModel(repository) }
             )
         }
 
-        //Navigation feature not implemented with the API
-        //composable<DetailsRoute>() { backStackEntry ->
-        //    val args = backStackEntry.toRoute<DetailsRoute>()
-        //    DetailScreen(
-        //        site = sites.first { it.id == args.siteId },
-        //        onBack = { navController.popBackStack() }
-        //    )
-        //}
+        composable<DetailsRoute>() { backStackEntry ->
+            val args = backStackEntry.toRoute<DetailsRoute>()
+            val siteId = checkNotNull(args.siteId)
+
+            DetailScreen(
+                vm = viewModel { DetailViewModel(siteId, repository) },
+                onBack = { navController.popBackStack() }
+            )
+        }
 
     }
+}
+
+@Composable
+private fun rememberSitesRepository(
+    apiKey: String = stringResource(Res.string.api_key)
+): SitesRepository = remember {
+
+    val client = HttpClient {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+            })
+        }
+        install(DefaultRequest) {
+            url {
+                protocol = URLProtocol.HTTPS
+                host = "api.opentripmap.com"
+                parameters.append("apikey", apiKey)
+            }
+        }
+    }
+
+    SitesRepository(SitesService(client))
 }
