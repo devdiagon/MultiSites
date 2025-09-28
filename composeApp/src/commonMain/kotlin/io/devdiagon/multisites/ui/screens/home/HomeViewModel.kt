@@ -5,10 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.devdiagon.multisites.data.Features
 import io.devdiagon.multisites.data.Site
 import io.devdiagon.multisites.data.SitesRepository
-import io.devdiagon.multisites.data.Sitexid
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -20,7 +18,7 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             state = UiState(loading = true)
-            val rawSites = repository.fetchRawSitesIds().features.map { it.toListxids() }
+            val rawSites = repository.fetchRawSitesIds()
 
             state = UiState(
                 loading = false,
@@ -44,7 +42,3 @@ class HomeViewModel(
         val sites : List<Site> = emptyList<Site>()
     )
 }
-
-private fun Features.toListxids() = Sitexid(
-    xid = this.properties.xid
-)
