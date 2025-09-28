@@ -38,7 +38,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun HomeScreen(
     onSiteClick: (Site) -> Unit,
-    vm: HomeViewModel = viewModel { HomeViewModel() }
+    vm: HomeViewModel
 ) {
     Screen {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
