@@ -13,7 +13,9 @@ import io.devdiagon.multisites.data.SitesService
 import io.devdiagon.multisites.ui.screens.home.HomeScreen
 import io.devdiagon.multisites.ui.screens.home.HomeViewModel
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -30,6 +32,8 @@ data class DetailsRoute(val siteId: String)
 @Composable
 fun Navigation(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
+    val apiKey = stringResource(Res.string.api_key)
+
     // Temp
     val client = remember {
         HttpClient {
@@ -38,11 +42,18 @@ fun Navigation(modifier: Modifier = Modifier) {
                     ignoreUnknownKeys = true
                 })
             }
+            install(DefaultRequest) {
+                url {
+                    protocol = URLProtocol.HTTPS
+                    host = "api.opentripmap.com/0.1"
+                    parameters.append("apikey", apiKey)
+                }
+            }
         }
     }
-    val apiKey = stringResource(Res.string.api_key)
+
     val viewModel = viewModel {
-        HomeViewModel(SitesRepository(SitesService(apiKey, client)))
+        HomeViewModel(SitesRepository(SitesService(client)))
     }
 
     NavHost(navController = navController, startDestination = HomeRoute) {
