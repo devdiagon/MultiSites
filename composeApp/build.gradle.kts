@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
+    alias(libs.plugins.androidx.room)
 }
 
 kotlin {
@@ -49,8 +49,8 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.androidx.navigation.compose)
-            implementation(libs.room.runtime)
-            implementation(libs.sqlite.bundled)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -88,12 +88,33 @@ android {
     }
 }
 
+tasks.matching { it.name == "kspDebugKotlinAndroid" }.configureEach {
+    println("Config for dependencies $name")
+    dependsOn(tasks.named("generateResourceAccessorsForAndroidDebug"))
+    dependsOn(tasks.named("generateResourceAccessorsForAndroidMain"))
+    dependsOn(tasks.named("generateActualResourceCollectorsForAndroidMain"))
+    dependsOn(tasks.named("generateComposeResClass"))
+    dependsOn(tasks.named("generateResourceAccessorsForCommonMain"))
+    dependsOn(tasks.named("generateExpectResourceCollectorsForCommonMain"))
+}
+
+tasks.matching { it.name == "kspReleaseKotlinAndroid" }.configureEach {
+    println("Function… $name")
+    dependsOn(tasks.named("generateResourceAccessorsForAndroidRelease"))
+    dependsOn(tasks.named("generateResourceAccessorsForAndroidMain"))
+    dependsOn(tasks.named("generateActualResourceCollectorsForAndroidMain"))
+    dependsOn(tasks.named("generateComposeResClass"))
+    dependsOn(tasks.named("generateResourceAccessorsForCommonMain"))
+    dependsOn(tasks.named("generateExpectResourceCollectorsForCommonMain"))
+}
+
 dependencies {
     debugImplementation(compose.uiTooling)
-    ksp(libs.room.compiler)
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
 }
 
 room {
     schemaDirectory("$projectDir/schemas")
 }
-
