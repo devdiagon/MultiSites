@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import io.devdiagon.multisites.data.SitesRepository
 import io.devdiagon.multisites.data.SitesService
+import io.devdiagon.multisites.data.database.SitesDao
 import io.devdiagon.multisites.ui.screens.detail.DetailScreen
 import io.devdiagon.multisites.ui.screens.detail.DetailViewModel
 import io.devdiagon.multisites.ui.screens.home.HomeScreen
@@ -33,9 +34,9 @@ object HomeRoute
 data class DetailsRoute(val siteId: String)
 
 @Composable
-fun Navigation(modifier: Modifier = Modifier) {
+fun Navigation(sitesDao: SitesDao) {
     val navController = rememberNavController()
-    val repository = rememberSitesRepository()
+    val repository = rememberSitesRepository(sitesDao)
 
     NavHost(navController = navController, startDestination = HomeRoute) {
         composable<HomeRoute>() {
@@ -62,6 +63,7 @@ fun Navigation(modifier: Modifier = Modifier) {
 
 @Composable
 private fun rememberSitesRepository(
+    sitesDao: SitesDao,
     apiKey: String = stringResource(Res.string.api_key)
 ): SitesRepository = remember {
 
@@ -80,5 +82,5 @@ private fun rememberSitesRepository(
         }
     }
 
-    SitesRepository(SitesService(client))
+    SitesRepository(SitesService(client), sitesDao)
 }

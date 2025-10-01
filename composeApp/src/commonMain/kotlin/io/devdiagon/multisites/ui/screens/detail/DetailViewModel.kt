@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.devdiagon.multisites.data.models.Site
 import io.devdiagon.multisites.data.SitesRepository
+import io.devdiagon.multisites.ui.screens.home.HomeViewModel.UiState
 import kotlinx.coroutines.launch
 
 class DetailViewModel(
@@ -19,10 +20,17 @@ class DetailViewModel(
     init {
         viewModelScope.launch {
             state = UiState(loading = false)
-            state = UiState(
-                loading = false,
-                site = repository.fetchRawSiteDetails(siteId)
-            )
+
+            // The repository handles getting the site details
+            repository.fetchRawSiteDetails(siteId).collect {
+                // Only change if it's data inside
+                if (it != null) {
+                    state = UiState(
+                        loading = false,
+                        site = it
+                    )
+                }
+            }
         }
     }
     data class UiState(

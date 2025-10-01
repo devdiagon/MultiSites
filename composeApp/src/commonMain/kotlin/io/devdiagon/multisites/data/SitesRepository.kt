@@ -1,27 +1,51 @@
 package io.devdiagon.multisites.data
 
+import io.devdiagon.multisites.data.database.SitesDao
 import io.devdiagon.multisites.data.models.Site
 import io.devdiagon.multisites.data.models.Sitexid
 import io.devdiagon.multisites.data.payload.Features
+import io.devdiagon.multisites.data.payload.RawPlaceDetailsReq
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
 
-class SitesRepository(private val sitesService: SitesService) {
-    suspend fun fetchRawSitesIds(): List<Sitexid> {
-        return sitesService.fetchRawSitesIds().features.map { it.toListxids() }
+class SitesRepository(
+    private val sitesService: SitesService,
+    private val sitesDao: SitesDao
+) {
+    // Get the sites from the database
+    val sites: Flow<List<Site>> = sitesDao.fetchRelevantSites().onEach { sites ->
+        // In case it was empty, save the SITE into the database
+        if(sites.isEmpty()) {
+            // Fetch the site xids first
+            val rawSitesIds = sitesService.fetchRawSitesIds().features.map { it.toListxids() }
+            // Get the details for every site xid
+            val fetchedSites = rawSitesIds.map { sitexid ->
+                sitesService.getSiteDetails(sitexid.xid).toDomainSite()
+            }
+            // Save the sites using the SitesDao
+            sitesDao.save(fetchedSites)
+        }
     }
 
-    suspend fun fetchRawSiteDetails(xid: String): Site {
-        val rawSite = sitesService.getSiteDetails(xid)
-        return Site(
-            id = rawSite.xid,
-            name = rawSite.name,
-            image = rawSite.preview.source,
-            description = rawSite.extracts.text,
-            city = rawSite.address.city,
-            country = rawSite.address.country,
-            kinds = rawSite.kinds
-        )
+    suspend fun fetchRawSiteDetails(xid: String): Flow<Site?> = sitesDao.fetchSiteById(xid).onEach { site ->
+        if (site == null) {
+            val fetchedSite = sitesService.getSiteDetails(xid).toDomainSite()
+            sitesDao.save(listOf(fetchedSite))
+        }
     }
 }
+
+// We get the Raw JSON data obj from the request so we need to
+// parse it into the Site model of the business domain
+private fun RawPlaceDetailsReq.toDomainSite() = Site(
+    id = this.xid,
+    name = this.name,
+    image = this.preview.source,
+    description = this.extracts.text,
+    city = this.address.city,
+    country = this.address.country,
+    kinds = this.kinds
+)
 
 private fun Features.toListxids() = Sitexid(
     xid = this.properties.xid

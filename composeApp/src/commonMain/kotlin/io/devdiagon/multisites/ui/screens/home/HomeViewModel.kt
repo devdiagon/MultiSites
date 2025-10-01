@@ -18,16 +18,17 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             state = UiState(loading = true)
-            // Get just the xid from the request
-            val rawSites = repository.fetchRawSitesIds()
 
-            state = UiState(
-                loading = false,
-                // Get the actual site using based on the xid (ik double API call)
-                sites = rawSites.map {
-                    repository.fetchRawSiteDetails(it.xid)
+            // The repository handles getting the sites
+            repository.sites.collect {
+                // Only change if it's data inside
+                if (it.isNotEmpty()) {
+                    state = UiState(
+                        loading = false,
+                        sites = it
+                    )
                 }
-            )
+            }
         }
     }
 
