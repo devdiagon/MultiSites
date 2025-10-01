@@ -1,6 +1,7 @@
 package io.devdiagon.multisites
 
 import androidx.room.RoomDatabase
+import io.devdiagon.multisites.data.RegionRepository
 import io.devdiagon.multisites.data.SitesRepository
 import io.devdiagon.multisites.data.SitesService
 import io.devdiagon.multisites.data.database.SitesDB
@@ -23,7 +24,7 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 val appModule = module {
-    single(named("apliKey")) { BuildConfig.API_KEY }
+    single(named("apiKey")) { BuildConfig.API_KEY }
     single<SitesDao> {
         val dbBuilder = get<RoomDatabase.Builder<SitesDB>>()
         dbBuilder.build().sitesDao()
@@ -33,6 +34,7 @@ val appModule = module {
 val dataModule = module {
     factoryOf(::SitesRepository)
     factoryOf(::SitesService)
+    factoryOf(::RegionRepository)
     single<HttpClient> {
         HttpClient {
             install(ContentNegotiation) {

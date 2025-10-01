@@ -10,14 +10,16 @@ import kotlinx.coroutines.flow.onEach
 
 class SitesRepository(
     private val sitesService: SitesService,
-    private val sitesDao: SitesDao
+    private val sitesDao: SitesDao,
+    private val regionRepository: RegionRepository
 ) {
     // Get the sites from the database
     val sites: Flow<List<Site>> = sitesDao.fetchRelevantSites().onEach { sites ->
         // In case it was empty, save the SITE into the database
         if(sites.isEmpty()) {
-            // Fetch the site xids first
-            val rawSitesIds = sitesService.fetchRawSitesIds().features.map { it.toListxids() }
+            // Fetch the site xids first by the region
+            val rawSitesIds = sitesService.fetchRawSitesIds()
+                .features.map { it.toListxids() }
             // Get the details for every site xid
             val fetchedSites = rawSitesIds.map { sitexid ->
                 sitesService.getSiteDetails(sitexid.xid).toDomainSite()
