@@ -2,27 +2,15 @@ package io.devdiagon.multisites.ui.screens
 
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import io.devdiagon.multisites.data.SitesRepository
-import io.devdiagon.multisites.data.SitesService
-import io.devdiagon.multisites.data.database.SitesDao
 import io.devdiagon.multisites.ui.screens.detail.DetailScreen
-import io.devdiagon.multisites.ui.screens.detail.DetailViewModel
 import io.devdiagon.multisites.ui.screens.home.HomeScreen
-import io.devdiagon.multisites.ui.screens.home.HomeViewModel
-import io.deviagon.multisites.BuildConfig
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.http.URLProtocol
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 
 @Serializable
@@ -31,17 +19,15 @@ object HomeRoute
 data class DetailsRoute(val siteId: String)
 
 @Composable
-fun Navigation(sitesDao: SitesDao) {
+fun Navigation() {
     val navController = rememberNavController()
-    val repository = rememberSitesRepository(sitesDao)
 
     NavHost(navController = navController, startDestination = HomeRoute) {
         composable<HomeRoute>() {
             HomeScreen(
                 onSiteClick = { site ->
                     navController.navigate(DetailsRoute(site.id))
-                },
-                vm = viewModel { HomeViewModel(repository) }
+                }
             )
         }
 
@@ -50,30 +36,10 @@ fun Navigation(sitesDao: SitesDao) {
             val siteId = checkNotNull(args.siteId)
 
             DetailScreen(
-                vm = viewModel { DetailViewModel(siteId, repository) },
+                vm = koinViewModel(parameters = { parametersOf(siteId) }),
                 onBack = { navController.popBackStack() }
             )
         }
 
     }
-}
-
-@Composable
-private fun rememberSitesRepository(sitesDao: SitesDao): SitesRepository = remember {
-    val client = HttpClient {
-        install(ContentNegotiation) {
-            json(Json {
-                ignoreUnknownKeys = true
-            })
-        }
-        install(DefaultRequest) {
-            url {
-                protocol = URLProtocol.HTTPS
-                host = "api.opentripmap.com"
-                parameters.append("apikey", BuildConfig.API_KEY)
-            }
-        }
-    }
-
-    SitesRepository(SitesService(client), sitesDao)
 }
