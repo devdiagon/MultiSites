@@ -1,5 +1,6 @@
 package io.devdiagon.multisites.data
 
+import io.devdiagon.multisites.data.payload.RawLocationReq
 import io.devdiagon.multisites.data.payload.RawPlaceDetailsReq
 import io.devdiagon.multisites.data.payload.RawPlacesReq
 import io.ktor.client.HttpClient
@@ -8,13 +9,19 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
 class SitesService(private val client : HttpClient) {
-    suspend fun fetchRawSitesIds(): RawPlacesReq {
+    suspend fun fetchLocationSpecs(name: String): RawLocationReq {
+        return client
+            .get("/0.1/en/places/geoname?name=$name")
+            .body<RawLocationReq>()
+    }
+
+    suspend fun fetchRawSitesIds(lon: Double, lat: Double): RawPlacesReq {
         return client
             .get("/0.1/en/places/radius") {
                 // HARDCODED parameters
                 parameter("radius","10000")
-                parameter("lon","-78.4678")
-                parameter("lat","-0.1807")
+                parameter("lon",lon)
+                parameter("lat",lat)
                 parameter("limit","15")
                 parameter("kinds","museums,historic,foods,architecture,natural")
                 parameter("rate", "3")

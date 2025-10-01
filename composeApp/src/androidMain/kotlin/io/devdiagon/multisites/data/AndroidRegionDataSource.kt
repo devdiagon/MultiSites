@@ -23,7 +23,7 @@ class AndroidRegionDataSource(
 
     private suspend fun Location.toRegion(): String {
         val addresses = geocoder.getFromLocationCompat(latitude, longitude, 1)
-        val region = addresses.firstOrNull()?.countryCode
+        val region = addresses.firstOrNull()?.locality
         return region ?: DEFAULT_REGION
     }
 }

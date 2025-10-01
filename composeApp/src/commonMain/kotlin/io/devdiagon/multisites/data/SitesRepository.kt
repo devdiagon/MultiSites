@@ -17,8 +17,12 @@ class SitesRepository(
     val sites: Flow<List<Site>> = sitesDao.fetchRelevantSites().onEach { sites ->
         // In case it was empty, save the SITE into the database
         if(sites.isEmpty()) {
+            // Fetch the location latitude and longitude
+            val location = regionRepository.fetchRegion()
+            val regionLocation = sitesService.fetchLocationSpecs(location)
+
             // Fetch the site xids first by the region
-            val rawSitesIds = sitesService.fetchRawSitesIds()
+            val rawSitesIds = sitesService.fetchRawSitesIds(regionLocation.lon, regionLocation.lat)
                 .features.map { it.toListxids() }
             // Get the details for every site xid
             val fetchedSites = rawSitesIds.map { sitexid ->
