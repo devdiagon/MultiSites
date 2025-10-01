@@ -20,6 +20,7 @@ room = "2.8.1"
 sqlite = "2.6.1"
 build-config = "5.6.8"
 koin-bom = "4.1.1"
+moko = "0.18.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -48,6 +49,7 @@ koin-core = { module = "io.insert-koin:koin-core" }
 koin-android = { module = "io.insert-koin:koin-android" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
+moko-permissions = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
