@@ -1,7 +1,12 @@
 package io.devdiagon.multisites.data
 
-class RegionRepository {
-    fun fetchRegion(): String {
-        return "EC"
+interface RegionDataSource {
+    suspend fun fetchRegion(): String
+}
+class RegionRepository(
+    private val regionDataSource: RegionDataSource
+) {
+    suspend fun fetchRegion(): String {
+        return regionDataSource.fetchRegion()
     }
 }
