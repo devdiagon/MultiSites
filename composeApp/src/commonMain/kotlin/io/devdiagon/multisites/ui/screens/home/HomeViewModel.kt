@@ -15,7 +15,7 @@ class HomeViewModel(
     var state  by mutableStateOf(UiState())
         private set
 
-    init {
+    fun onUiReady() {
         viewModelScope.launch {
             state = UiState(loading = true)
 
@@ -31,6 +31,22 @@ class HomeViewModel(
             }
         }
     }
+    /*init {
+        viewModelScope.launch {
+            state = UiState(loading = true)
+
+            // The repository handles getting the sites
+            repository.sites.collect {
+                // Only change if it's data inside
+                if (it.isNotEmpty()) {
+                    state = UiState(
+                        loading = false,
+                        sites = it
+                    )
+                }
+            }
+        }
+    }*/
 
     data class UiState(
         val loading : Boolean = false,

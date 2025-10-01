@@ -32,8 +32,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import dev.icerock.moko.permissions.Permission
 import io.devdiagon.multisites.data.models.Site
 import io.devdiagon.multisites.ui.common.LoadingIndicator
+import io.devdiagon.multisites.ui.common.PermissionRequestEffect
 import io.devdiagon.multisites.ui.screens.Screen
 import multisites.composeapp.generated.resources.Res
 import multisites.composeapp.generated.resources.app_name
@@ -47,6 +49,11 @@ fun HomeScreen(
     onSiteClick: (Site) -> Unit,
     vm: HomeViewModel = koinViewModel()
 ) {
+
+    PermissionRequestEffect(Permission.COARSE_LOCATION) {
+        vm.onUiReady()
+    }
+
     Screen {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         Scaffold(
