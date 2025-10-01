@@ -1,16 +1,19 @@
 package io.devdiagon.multisites.ui.screens.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -57,7 +61,10 @@ fun HomeScreen(
             // Get the loading value from the View Model
             val state = vm.state
 
-            LoadingIndicator(enabled = state.loading)
+            LoadingIndicator(
+                enabled = state.loading,
+                modifier = Modifier.fillMaxSize().padding(padding)
+            )
 
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(120.dp),
@@ -68,7 +75,7 @@ fun HomeScreen(
             ) {
                 // Pass the sites got from the View Model state
                 items(state.sites, key = { it.id }) {
-                    SiteItem(site = it, onSiteClick = { onSiteClick(it) })
+                    SiteItem(site = it) { onSiteClick(it) }
                 }
             }
         }
@@ -80,7 +87,7 @@ fun SiteItem(site: Site, onSiteClick: () -> Unit) {
     Column(
         modifier = Modifier.clickable(onClick = onSiteClick)
     ) {
-        Box{
+        Box {
             AsyncImage(
                 model = site.image,
                 contentDescription = site.name,
@@ -91,14 +98,19 @@ fun SiteItem(site: Site, onSiteClick: () -> Unit) {
                     .clip(MaterialTheme.shapes.small)
             )
             if(site.isFavorite){
-                Icon(
-                    imageVector = Icons.Default.Favorite,
-                    contentDescription = stringResource(Res.string.favorite),
-                    tint = MaterialTheme.colorScheme.inverseOnSurface,
+                Box(
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
                         .padding(8.dp)
-                )
+                        .align(Alignment.TopEnd)
+                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                        .padding(3.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        contentDescription = stringResource(Res.string.favorite),
+                        tint = MaterialTheme.colorScheme.inverseOnSurface
+                    )
+                }
             }
         }
 
