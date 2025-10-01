@@ -117,6 +117,7 @@ tasks.matching { it.name == "kspReleaseKotlinAndroid" }.configureEach {
     dependsOn(tasks.named("generateComposeResClass"))
     dependsOn(tasks.named("generateResourceAccessorsForCommonMain"))
     dependsOn(tasks.named("generateExpectResourceCollectorsForCommonMain"))
+    dependsOn(tasks.named("generateNonAndroidBuildConfig"))
 }
 
 dependencies {
