@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +9,7 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.gradleBuildConfig)
 }
 
 kotlin {
@@ -96,6 +98,7 @@ tasks.matching { it.name == "kspDebugKotlinAndroid" }.configureEach {
     dependsOn(tasks.named("generateComposeResClass"))
     dependsOn(tasks.named("generateResourceAccessorsForCommonMain"))
     dependsOn(tasks.named("generateExpectResourceCollectorsForCommonMain"))
+    dependsOn(tasks.named("generateNonAndroidBuildConfig"))
 }
 
 tasks.matching { it.name == "kspReleaseKotlinAndroid" }.configureEach {
@@ -117,4 +120,14 @@ dependencies {
 
 room {
     schemaDirectory("$projectDir/schemas")
+}
+
+buildConfig {
+    packageName("io.deviagon.multisites")
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").reader())
+
+    val apiKey = properties.getProperty("API_KEY")
+
+    buildConfigField("API_KEY", apiKey)
 }

@@ -18,6 +18,7 @@ navigation-compose = "2.9.0"
 ksp = "2.2.20-2.0.3"
 room = "2.8.1"
 sqlite = "2.6.1"
+build-config = "5.6.8"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -51,3 +52,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id ="com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
+gradleBuildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "build-config" }
