@@ -33,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.location.COARSE_LOCATION
 import io.devdiagon.multisites.data.models.Site
 import io.devdiagon.multisites.ui.common.LoadingIndicator
 import io.devdiagon.multisites.ui.common.PermissionRequestEffect
