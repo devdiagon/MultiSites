@@ -2,6 +2,7 @@ package io.devdiagon.multisites.ui.screens.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -10,13 +11,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -28,6 +33,7 @@ import io.devdiagon.multisites.ui.common.LoadingIndicator
 import io.devdiagon.multisites.ui.screens.Screen
 import multisites.composeapp.generated.resources.Res
 import multisites.composeapp.generated.resources.app_name
+import multisites.composeapp.generated.resources.favorite
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -74,15 +80,28 @@ fun SiteItem(site: Site, onSiteClick: () -> Unit) {
     Column(
         modifier = Modifier.clickable(onClick = onSiteClick)
     ) {
-        AsyncImage(
-            model = site.image,
-            contentDescription = site.name,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(2 / 3f)
-                .clip(MaterialTheme.shapes.small)
-        )
+        Box{
+            AsyncImage(
+                model = site.image,
+                contentDescription = site.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(2 / 3f)
+                    .clip(MaterialTheme.shapes.small)
+            )
+            if(site.isFavorite){
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = stringResource(Res.string.favorite),
+                    tint = MaterialTheme.colorScheme.inverseOnSurface,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                )
+            }
+        }
+
         Text(
             text = site.name,
             style = MaterialTheme.typography.bodySmall,

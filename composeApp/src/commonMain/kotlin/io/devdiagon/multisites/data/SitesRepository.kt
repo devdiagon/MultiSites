@@ -33,6 +33,10 @@ class SitesRepository(
             sitesDao.save(listOf(fetchedSite))
         }
     }
+
+    suspend fun toggleFavorite(site: Site) {
+        sitesDao.save(listOf(site.copy(isFavorite = !site.isFavorite)))
+    }
 }
 
 // We get the Raw JSON data obj from the request so we need to
@@ -44,7 +48,8 @@ private fun RawPlaceDetailsReq.toDomainSite() = Site(
     description = this.extracts.text,
     city = this.address.city,
     country = this.address.country,
-    kinds = this.kinds
+    kinds = this.kinds,
+    isFavorite = false
 )
 
 private fun Features.toListxids() = Sitexid(

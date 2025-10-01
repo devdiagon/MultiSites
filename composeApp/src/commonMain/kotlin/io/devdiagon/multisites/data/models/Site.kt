@@ -12,5 +12,6 @@ data class Site(
     val description: String,
     val city: String,
     val country: String,
-    val kinds: String
+    val kinds: String,
+    val isFavorite: Boolean
 )

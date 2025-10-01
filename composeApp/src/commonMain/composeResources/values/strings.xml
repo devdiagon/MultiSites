@@ -3,4 +3,5 @@
     <string name="back">Go Back</string>
     <string name="site_location">Location</string>
     <string name="site_kinds">Kinds</string>
+    <string name="favorite">Mark as Favorite</string>
 </resources>

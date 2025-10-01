@@ -9,7 +9,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +38,7 @@ import io.devdiagon.multisites.ui.common.LoadingIndicator
 import io.devdiagon.multisites.ui.screens.Screen
 import multisites.composeapp.generated.resources.Res
 import multisites.composeapp.generated.resources.back
+import multisites.composeapp.generated.resources.favorite
 import multisites.composeapp.generated.resources.site_kinds
 import multisites.composeapp.generated.resources.site_location
 import org.jetbrains.compose.resources.stringResource
@@ -53,6 +57,18 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                     onBack = onBack,
                     scrollBehavior = scrollBehavior
                 )
+            },
+            floatingActionButton = {
+                state.site?.let { site ->
+                    FloatingActionButton(
+                        onClick = vm::onFavoriteClick
+                    ) {
+                        Icon(
+                            imageVector = if (site.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = stringResource(Res.string.favorite)
+                        )
+                    }
+                }
             }
         ) { padding ->
             LoadingIndicator(
