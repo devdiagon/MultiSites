@@ -3,7 +3,6 @@ package io.devdiagon.multisites.ui.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,6 +15,7 @@ import io.devdiagon.multisites.ui.screens.detail.DetailScreen
 import io.devdiagon.multisites.ui.screens.detail.DetailViewModel
 import io.devdiagon.multisites.ui.screens.home.HomeScreen
 import io.devdiagon.multisites.ui.screens.home.HomeViewModel
+import io.deviagon.multisites.BuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -23,9 +23,6 @@ import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import multisites.composeapp.generated.resources.Res
-import multisites.composeapp.generated.resources.api_key
-import org.jetbrains.compose.resources.stringResource
 
 
 @Serializable
@@ -62,11 +59,7 @@ fun Navigation(sitesDao: SitesDao) {
 }
 
 @Composable
-private fun rememberSitesRepository(
-    sitesDao: SitesDao,
-    apiKey: String = stringResource(Res.string.api_key)
-): SitesRepository = remember {
-
+private fun rememberSitesRepository(sitesDao: SitesDao): SitesRepository = remember {
     val client = HttpClient {
         install(ContentNegotiation) {
             json(Json {
@@ -77,7 +70,7 @@ private fun rememberSitesRepository(
             url {
                 protocol = URLProtocol.HTTPS
                 host = "api.opentripmap.com"
-                parameters.append("apikey", apiKey)
+                parameters.append("apikey", BuildConfig.API_KEY)
             }
         }
     }

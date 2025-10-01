@@ -16,4 +16,3 @@ captures
 !*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
-/composeApp/src/commonMain/composeResources/values/api_key.xml
